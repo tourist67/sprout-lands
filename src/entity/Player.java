@@ -13,12 +13,18 @@ public class Player extends Entity {
 	Gamepanel gp;
 	KeyHandler keyH;
 
+	public final int screenX;
+	public final int screenY;
+	
 	int spriteCounter = 0;
 	int spriteNum = 1;
 
 	public Player(Gamepanel gp, KeyHandler keyH) {
 		this.gp = gp;
 		this.keyH = keyH;
+
+		screenX = gp.screenWidth / 2 - (gp.tileSize * 3) / 2;
+		screenY = gp.screenHeight / 2 - (gp.tileSize * 3) / 2;
 		setDefaultValues();
 		getPlayerImage();
 	}
@@ -111,6 +117,6 @@ public class Player extends Entity {
 		}
 
 		// *3 for scaling up the player size
-		g2.drawImage(image, worldX, worldY, gp.tileSize*3, gp.tileSize*3, null);
+		g2.drawImage(image, screenX, screenY, gp.tileSize*3, gp.tileSize*3, null);
 	}
 }
