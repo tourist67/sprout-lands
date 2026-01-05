@@ -50,7 +50,7 @@ public class Gamepanel extends JPanel implements Runnable {
 	public Entity npc[] = new Entity[10];
 	public AssetSetter assetSetter = new AssetSetter(this);
 	
-	// Plants tracking
+	// Plants
 	public ArrayList<Plant> plants = new ArrayList<>();
 
 
