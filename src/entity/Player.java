@@ -34,6 +34,9 @@ public class Player extends Entity {
 	public boolean hasSeedPacket = false;
 	public int harvestCount = 0;
 	
+	// Dialogue cooldown
+	public int dialogueCooldown = 0;
+	
 	BufferedImage actionUp1, actionUp2, actionDown1, actionDown2;
 	BufferedImage actionLeft1, actionLeft2, actionRight1, actionRight2;
 
@@ -154,6 +157,10 @@ public class Player extends Entity {
 
 			collisionOn = false;
 			gp.cChecker.checkTile(this);
+			
+			// Check NPC collision
+			int npcIndex = gp.cChecker.checkEntity(this, gp.npc);
+			interactNPC(npcIndex);
 
 			if (collisionOn == false) {
 				switch (direction) {
@@ -184,6 +191,17 @@ public class Player extends Entity {
 			}
 		}
 
+	}
+	
+	public void interactNPC(int index) {
+		if (dialogueCooldown > 0) {
+			dialogueCooldown--;
+			return;
+		}
+		if (index != 999) {
+			gp.npc[index].speak();
+			dialogueCooldown = 30; // Cooldown frames before can trigger dialogue again
+		}
 	}
 
 	public void draw(Graphics2D g2) {

@@ -28,6 +28,13 @@ public class NPC_OldMan extends Entity {
         worldY = gp.tileSize * 21;
         speed = 1;
         direction = "down";
+        
+        setDialogue();
+    }
+    
+    public void setDialogue() {
+        dialogues[0] = "I love eating fruits! Sell me fruits and I will give you money!";
+        dialogues[1] = "Glad doing business with you!";
     }
 
     public void getImage() {

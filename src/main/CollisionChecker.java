@@ -86,4 +86,46 @@ public class CollisionChecker {
     return index;
   }
 
+  public int checkEntity(Entity entity, Entity[] target) {
+    int index = 999;
+    
+    for (int i = 0; i < target.length; i++) {
+      if (target[i] != null) {
+        // Get entity's solid area position
+        int entitySolidAreaX = entity.worldX + entity.solidArea.x;
+        int entitySolidAreaY = entity.worldY + entity.solidArea.y;
+        
+        // Get target's solid area position
+        int targetSolidAreaX = target[i].worldX + target[i].solidArea.x;
+        int targetSolidAreaY = target[i].worldY + target[i].solidArea.y;
+        
+        // Predict next position based on direction
+        switch(entity.direction) {
+          case "up":
+            entitySolidAreaY -= entity.speed;
+            break;
+          case "down":
+            entitySolidAreaY += entity.speed;
+            break;
+          case "left":
+            entitySolidAreaX -= entity.speed;
+            break;
+          case "right":
+            entitySolidAreaX += entity.speed;
+            break;
+        }
+        
+        // Check collision
+        if (entitySolidAreaX < targetSolidAreaX + target[i].solidArea.width &&
+            entitySolidAreaX + entity.solidArea.width > targetSolidAreaX &&
+            entitySolidAreaY < targetSolidAreaY + target[i].solidArea.height &&
+            entitySolidAreaY + entity.solidArea.height > targetSolidAreaY) {
+          entity.collisionOn = true;
+          index = i;
+        }
+      }
+    }
+    return index;
+  }
+
 }

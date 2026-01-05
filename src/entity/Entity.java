@@ -14,6 +14,10 @@ public class Entity {
   public BufferedImage up1, up2, down1, down2, left1, left2, right1, right2;
   public String direction;
 
+  // Dialogue
+  public String dialogues[] = new String[20];
+  public int dialogueIndex = 0;
+
   public int spriteCounter = 0;
   public int spriteNum = 1;
 
@@ -56,5 +60,15 @@ public class Entity {
       }
       g2.drawImage(image, screenX, screenY, gp.tileSize, gp.tileSize, null);
     }
+  }
+
+  public void speak() {
+    // Check fruit count for dialogue - override in specific NPCs if needed
+    if (gp.player.harvestCount > 0) {
+      gp.ui.currentDialogue = dialogues[1]; // "Glad doing business with you!"
+    } else {
+      gp.ui.currentDialogue = dialogues[0]; // "I love eating fruits! Sell me fruits..."
+    }
+    gp.gameState = gp.dialogueState;
   }
 }

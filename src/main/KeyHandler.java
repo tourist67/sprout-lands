@@ -29,6 +29,14 @@ public class KeyHandler implements KeyListener {
 			}
 		}
 
+		// Exit dialogue state when WASD is pressed
+		if (gp.gameState == gp.dialogueState) {
+			if (code == KeyEvent.VK_W || code == KeyEvent.VK_A || 
+				code == KeyEvent.VK_S || code == KeyEvent.VK_D) {
+				gp.gameState = gp.playState;
+			}
+		}
+
 		if (code == KeyEvent.VK_W) {
 			upPressed = true;
 		}

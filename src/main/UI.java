@@ -9,6 +9,7 @@ public class UI {
     Gamepanel gp;
     Font arial_40;
     Font arial_20;
+    public String currentDialogue = "";
 
     public UI(Gamepanel gp) {
         this.gp = gp;
@@ -22,6 +23,9 @@ public class UI {
         
         if (gp.gameState == gp.pauseState) {
             drawPauseScreen(g2);
+        }
+        if (gp.gameState == gp.dialogueState) {
+            drawDialogueScreen(g2);
         }
     }
 
@@ -70,5 +74,29 @@ public class UI {
         int y = gp.screenHeight / 2;
         
         g2.drawString(text, x, y);
+    }
+    
+    public void drawDialogueScreen(Graphics2D g2) {
+        // Dialogue window position and size
+        int x = gp.tileSize * 2;
+        int y = gp.tileSize / 2;
+        int width = gp.screenWidth - (gp.tileSize * 4);
+        int height = gp.tileSize * 4;
+        
+        // Draw semi-transparent black box
+        g2.setColor(new Color(0, 0, 0, 200));
+        g2.fillRoundRect(x, y, width, height, 35, 35);
+        
+        // Draw white border
+        g2.setColor(Color.white);
+        g2.setStroke(new BasicStroke(5));
+        g2.drawRoundRect(x + 5, y + 5, width - 10, height - 10, 25, 25);
+        
+        // Draw dialogue text centered
+        g2.setFont(arial_20);
+        int textWidth = (int) g2.getFontMetrics().getStringBounds(currentDialogue, g2).getWidth();
+        int textX = x + (width - textWidth) / 2;
+        int textY = y + height / 2;
+        g2.drawString(currentDialogue, textX, textY);
     }
 }
