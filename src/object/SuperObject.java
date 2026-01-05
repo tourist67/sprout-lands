@@ -10,6 +10,8 @@ public class SuperObject {
   public String name;
   public boolean collision = false;
   public int worldX, worldY;
+  public boolean stackable = false;
+  public int stackCount = 1;
 
   public void draw(Graphics g2, Gamepanel gp) {
     int screenX = worldX - gp.player.worldX + gp.player.screenX;

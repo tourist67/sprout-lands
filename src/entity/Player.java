@@ -10,6 +10,7 @@ import java.awt.image.BufferedImage;
 import main.Gamepanel;
 import main.KeyHandler;
 import object.SuperObject;
+import tile.Plant;
 
 public class Player extends Entity {
 	Gamepanel gp;
@@ -30,6 +31,8 @@ public class Player extends Entity {
 	public final int maxInventorySize = 5;
 	public SuperObject[] inventory = new SuperObject[maxInventorySize];
 	public int inventoryCount = 0;
+	public boolean hasSeedPacket = false;
+	public int harvestCount = 0;
 	
 	BufferedImage actionUp1, actionUp2, actionDown1, actionDown2;
 	BufferedImage actionLeft1, actionLeft2, actionRight1, actionRight2;
@@ -97,10 +100,24 @@ public class Player extends Entity {
 			actionSpriteNum = 1; 
 			keyH.ePressed = false;
 			
-			// Convert grass to dirt in front of player
-			convertGrassToDirt();
+			// Convert grass to tilled dirt in front of player
+			convertGrassToTilledDirt();
 		} else if (keyH.ePressed && !hasHoe) {
 			keyH.ePressed = false; // Consume the key press even without hoe
+		}
+		
+		// Handle planting with R key (infinite if we have seed packet)
+		if (keyH.rPressed && hasSeedPacket) {
+			plantSeed();
+			keyH.rPressed = false;
+		} else if (keyH.rPressed) {
+			keyH.rPressed = false; // Consume the key press even without seed packet
+		}
+		
+		// Handle harvesting with T key
+		if (keyH.tPressed) {
+			harvestPlant();
+			keyH.tPressed = false;
 		}
 		
 		if (isActioning) {
@@ -222,7 +239,7 @@ public class Player extends Entity {
 		g2.drawImage(image, screenX, screenY, gp.tileSize, gp.tileSize, null);
 	}
 	
-	public void convertGrassToDirt() {
+	public void convertGrassToTilledDirt() {
 		int playerCenterX = worldX + gp.tileSize / 2;
 		int playerCenterY = worldY + gp.tileSize / 2;
 		int tileCol = playerCenterX / gp.tileSize;
@@ -231,8 +248,70 @@ public class Player extends Entity {
 		if (tileCol >= 0 && tileCol < gp.maxWorldCol && tileRow >= 0 && tileRow < gp.maxWorldRow) {
 			int tileNum = gp.tileM.mapTileNum[tileCol][tileRow];
 			if (gp.tileM.tile[tileNum].type != null && gp.tileM.tile[tileNum].type.equals("grass")) {
-				gp.tileM.mapTileNum[tileCol][tileRow] = 1; 
+				gp.tileM.mapTileNum[tileCol][tileRow] = 4; // 4 is tilled dirt
 			}
+		}
+	}
+	
+	public void plantSeed() {
+		int playerCenterX = worldX + gp.tileSize / 2;
+		int playerCenterY = worldY + gp.tileSize / 2;
+		int tileCol = playerCenterX / gp.tileSize;
+		int tileRow = playerCenterY / gp.tileSize;
+		
+		if (tileCol >= 0 && tileCol < gp.maxWorldCol && tileRow >= 0 && tileRow < gp.maxWorldRow) {
+			int tileNum = gp.tileM.mapTileNum[tileCol][tileRow];
+			// Can only plant on tilled dirt (tile 4)
+			if (gp.tileM.tile[tileNum].type != null && gp.tileM.tile[tileNum].type.equals("tilled")) {
+				// Plant the seed - set to plant stage 1 (tile 5)
+				gp.tileM.mapTileNum[tileCol][tileRow] = 5;
+				// No decrement - seed packet has infinite seeds
+				
+				// Add plant to the growth tracking list
+				Plant newPlant = new Plant(tileCol, tileRow);
+				gp.addPlant(newPlant);
+			}
+		}
+	}
+	
+	public void harvestPlant() {
+		int playerCenterX = worldX + gp.tileSize / 2;
+		int playerCenterY = worldY + gp.tileSize / 2;
+		int tileCol = playerCenterX / gp.tileSize;
+		int tileRow = playerCenterY / gp.tileSize;
+		
+		if (tileCol >= 0 && tileCol < gp.maxWorldCol && tileRow >= 0 && tileRow < gp.maxWorldRow) {
+			int tileNum = gp.tileM.mapTileNum[tileCol][tileRow];
+			// Can only harvest fully grown plants (tile 7)
+			if (gp.tileM.tile[tileNum].type != null && gp.tileM.tile[tileNum].type.equals("plant_fully_grown")) {
+				// Harvest the plant - reset tile to tilled dirt
+				gp.tileM.mapTileNum[tileCol][tileRow] = 4;
+				harvestCount++;
+				
+				// Add plant pickup to inventory (stackable)
+				addHarvestToInventory();
+				
+				// Remove plant from tracking list
+				gp.removePlant(tileCol, tileRow);
+			}
+		}
+	}
+	
+	public void addHarvestToInventory() {
+		// Check if we already have a plant pickup stack in inventory
+		for (int i = 0; i < inventoryCount; i++) {
+			if (inventory[i] != null && inventory[i].name.equals("Plant Pickup")) {
+				// Found existing stack, increment count
+				inventory[i].stackCount++;
+				return;
+			}
+		}
+		
+		// No existing stack, create new one if there's space
+		if (inventoryCount < maxInventorySize) {
+			object.OBJ_plant_pickup pickup = new object.OBJ_plant_pickup();
+			inventory[inventoryCount] = pickup;
+			inventoryCount++;
 		}
 	}
 	
@@ -248,6 +327,15 @@ public class Player extends Entity {
 					inventoryCount++;
 				}
 				gp.obj[index] = null; // Remove the hoe from the world
+			}
+			else if (objectName.equals("Seed Packet")) {
+				hasSeedPacket = true;
+				// Add to inventory if there's space
+				if (inventoryCount < maxInventorySize) {
+					inventory[inventoryCount] = gp.obj[index];
+					inventoryCount++;
+				}
+				gp.obj[index] = null; // Remove the seed packet from the world
 			}
 		}
 	}

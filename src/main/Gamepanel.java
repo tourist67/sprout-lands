@@ -5,9 +5,11 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.util.ArrayList;
 import javax.swing.JPanel;
 import entity.Player;
 import object.SuperObject;
+import tile.Plant;
 import tile.TileManager;
 
 public class Gamepanel extends JPanel implements Runnable {
@@ -44,6 +46,9 @@ public class Gamepanel extends JPanel implements Runnable {
 
 	public SuperObject obj[] = new SuperObject[10];
 	public AssetSetter assetSetter = new AssetSetter(this);
+	
+	// Plants tracking
+	public ArrayList<Plant> plants = new ArrayList<>();
 
 
 	// FPS
@@ -98,10 +103,23 @@ public class Gamepanel extends JPanel implements Runnable {
 	public void update() {
 		if (gameState == playState) {
 			player.update();
+			
+			// Update all plants for growth
+			for (Plant plant : plants) {
+				plant.update(this);
+			}
 		}
 		if (gameState == pauseState) {
 			// Do nothing when paused
 		}
+	}
+	
+	public void addPlant(Plant plant) {
+		plants.add(plant);
+	}
+	
+	public void removePlant(int col, int row) {
+		plants.removeIf(plant -> plant.tileCol == col && plant.tileRow == row);
 	}
 
 	@Override

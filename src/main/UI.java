@@ -46,6 +46,14 @@ public class UI {
             // Draw item if present
             if (gp.player.inventory[i] != null) {
                 g2.drawImage(gp.player.inventory[i].image, x + 4, y + 4, slotSize - 8, slotSize - 8, null);
+                
+                // Draw stack count if stackable and count > 1
+                if (gp.player.inventory[i].stackable && gp.player.inventory[i].stackCount > 1) {
+                    g2.setFont(arial_20);
+                    g2.setColor(Color.white);
+                    String countText = String.valueOf(gp.player.inventory[i].stackCount);
+                    g2.drawString(countText, x + slotSize - 15, y + slotSize - 5);
+                }
             }
         }
     }

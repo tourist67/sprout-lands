@@ -14,7 +14,7 @@ public class TileManager {
 
   public TileManager(Gamepanel gp) {
     this.gp = gp;
-    tile = new Tile[10];
+    tile = new Tile[20];
     mapTileNum = new int[gp.maxWorldCol][gp.maxWorldRow];
     getTileImage();
     loadMap();
@@ -66,6 +66,24 @@ public class TileManager {
       tile[3] = new Tile();
       tile[3].image = javax.imageio.ImageIO.read(getClass().getResourceAsStream("/res/tiles/water.png"));
       tile[3].collision = true;
+
+      // Tilled dirt (created by hoe) - plantable
+      tile[4] = new Tile();
+      tile[4].image = javax.imageio.ImageIO.read(getClass().getResourceAsStream("/res/tiles/dirt/dirt1.png"));
+      tile[4].type = "tilled";
+
+      // Plant growth stages (tiles 5-7)
+      tile[5] = new Tile();
+      tile[5].image = javax.imageio.ImageIO.read(getClass().getResourceAsStream("/res/plants/plant_state_1.png"));
+      tile[5].type = "plant_stage1";
+
+      tile[6] = new Tile();
+      tile[6].image = javax.imageio.ImageIO.read(getClass().getResourceAsStream("/res/plants/plant_state_2.png"));
+      tile[6].type = "plant_stage2";
+
+      tile[7] = new Tile();
+      tile[7].image = javax.imageio.ImageIO.read(getClass().getResourceAsStream("/res/plants/plant_state_3.png"));
+      tile[7].type = "plant_fully_grown";
 
     } catch (Exception e) {
       e.printStackTrace();
