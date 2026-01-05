@@ -102,6 +102,11 @@ public class TileManager {
         int screenX = worldX - gp.player.worldX + gp.player.screenX;
         int screenY = worldY - gp.player.worldY + gp.player.screenY;
         
+        // For plant tiles (5, 6, 7), draw tilled dirt first as background
+        if (tileNum >= 5 && tileNum <= 7) {
+            g2.drawImage(tile[4].image, screenX, screenY, gp.tileSize, gp.tileSize, null);
+        }
+        
         g2.drawImage(tile[tileNum].image, screenX, screenY, gp.tileSize, gp.tileSize, null);
 
         worldCol++;
