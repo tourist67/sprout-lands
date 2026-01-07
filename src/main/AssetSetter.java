@@ -1,6 +1,6 @@
 package main;
 
-import entity.NPC_OldMan;
+import entity.NPC1;
 
 public class AssetSetter {
   Gamepanel gp;
@@ -20,7 +20,7 @@ public class AssetSetter {
   }
 
   public void setNPC() {
-    gp.npc[0] = new NPC_OldMan(gp);
+    gp.npc[0] = new NPC1(gp);
   }
 }
  

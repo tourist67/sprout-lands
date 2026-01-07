@@ -7,12 +7,12 @@ import javax.imageio.ImageIO;
 
 import main.Gamepanel;
 
-public class NPC_OldMan extends Entity {
+public class NPC1 extends Entity {
 
     private Random random = new Random();
     private int actionLockCounter = 0;
 
-    public NPC_OldMan(Gamepanel gp) {
+    public NPC1(Gamepanel gp) {
         super(gp);
 
         solidArea = new Rectangle(8, 16, 32, 32);

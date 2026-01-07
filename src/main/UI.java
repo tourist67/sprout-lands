@@ -10,6 +10,12 @@ public class UI {
     Font arial_40;
     Font arial_20;
     public String currentDialogue = "";
+    
+    // Typing effect variables
+    private String fullDialogue = "";
+    private int charIndex = 0;
+    private int typingCounter = 0;
+    private int typingSpeed = 2; // Lower = faster typing
 
     public UI(Gamepanel gp) {
         this.gp = gp;
@@ -95,12 +101,40 @@ public class UI {
         g2.setStroke(new BasicStroke(5));
         g2.drawRoundRect(x + 5, y + 5, width - 10, height - 10, 25, 25);
         
+        // Update typing effect
+        if (charIndex < fullDialogue.length()) {
+            typingCounter++;
+            if (typingCounter >= typingSpeed) {
+                charIndex++;
+                currentDialogue = fullDialogue.substring(0, charIndex);
+                typingCounter = 0;
+            }
+        }
+        
         // Draw dialogue text centered
         g2.setFont(arial_20);
         int textWidth = (int) g2.getFontMetrics().getStringBounds(currentDialogue, g2).getWidth();
         int textX = x + (width - textWidth) / 2;
         int textY = y + height / 2;
         g2.drawString(currentDialogue, textX, textY);
+    }
+    
+    // Call this method to start a new dialogue with typing effect
+    public void setDialogue(String dialogue) {
+        if (!dialogue.equals(fullDialogue)) {
+            fullDialogue = dialogue;
+            currentDialogue = "";
+            charIndex = 0;
+            typingCounter = 0;
+        }
+    }
+    
+    // Reset dialogue state when dialogue ends
+    public void resetDialogue() {
+        fullDialogue = "";
+        currentDialogue = "";
+        charIndex = 0;
+        typingCounter = 0;
     }
     
     public void drawMoneyUI(Graphics2D g2) {

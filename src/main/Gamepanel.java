@@ -53,7 +53,6 @@ public class Gamepanel extends JPanel implements Runnable {
 	// Plants
 	public ArrayList<Plant> plants = new ArrayList<>();
 
-
 	// FPS
 	int FPS = 60;
 

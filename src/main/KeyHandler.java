@@ -34,6 +34,7 @@ public class KeyHandler implements KeyListener {
 			if (code == KeyEvent.VK_W || code == KeyEvent.VK_A || 
 				code == KeyEvent.VK_S || code == KeyEvent.VK_D) {
 				gp.gameState = gp.playState;
+				gp.ui.resetDialogue(); // Reset typing effect when exiting dialogue
 			}
 		}
 
