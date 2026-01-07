@@ -78,6 +78,6 @@ Whiskerfield is a simple farming simulation where you till the land, plant seeds
 
 ---
 
-## 🎨 Sprite Credit
+## 🎨 Sprite Credits
 
 Art assets are provided by Cup Nooble.
